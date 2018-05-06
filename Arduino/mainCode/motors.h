@@ -13,7 +13,7 @@
 */
 
 
-#define ENABLE_LEFT 3   // white
-#define ENABLE_RIGHT 4  // purple
-#define MOTOR_LEFT 5    // blue
-#define MOTOR_RIGHT 6   // gray
+#define ENABLE_LEFT 	3  // white
+#define ENABLE_RIGHT 	4  // purple
+#define MOTOR_LEFT 		5  // blue
+#define MOTOR_RIGHT 	6  // gray

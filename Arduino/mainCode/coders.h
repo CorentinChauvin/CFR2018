@@ -29,10 +29,10 @@
 // INITIALISATION
 
 // Pin
-#define PIN_A_LEFT 18
-#define PIN_B_LEFT 19
-#define PIN_A_RIGHT 20
-#define PIN_B_RIGHT 21
+#define CODER_A_LEFT 18
+#define CODER_B_LEFT 19
+#define CODER_A_RIGHT 20
+#define CODER_B_RIGHT 21
 
 // Geometrical dimensions
 const double L = 0.1175;
@@ -59,7 +59,7 @@ Twist robotTwist = {0, 0};
 
 void updateRightEncoder()
 {
-  if (digitalRead(PIN_B_RIGHT))
+  if (digitalRead(CODER_B_RIGHT))
     k_rightEncoder++;
   else
     k_rightEncoder--;
@@ -67,7 +67,7 @@ void updateRightEncoder()
 
 void updateLeftEncoder()
 {
-  if (digitalRead(PIN_B_LEFT))
+  if (digitalRead(CODER_B_LEFT))
     k_leftEncoder--;
   else
     k_leftEncoder++;

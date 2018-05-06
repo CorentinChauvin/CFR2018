@@ -6,10 +6,12 @@
 #include "definitions.h"
 #include "coders.h"
 #include "motors.h"
+#include "plier.h"
 
 // Global variables
 long int lastTime;
 int k_display = 0;
+
 
 void setup() {
 
@@ -17,27 +19,34 @@ void setup() {
   Serial.println("--- Start ---");
 
   // Opening pins
-  pinMode(INPUT, PIN_A_LEFT); // coders
-  pinMode(INPUT, PIN_B_LEFT);
-  pinMode(INPUT, PIN_A_RIGHT);
-  pinMode(INPUT, PIN_B_RIGHT);
+  pinMode(INPUT, CODER_A_LEFT); // coders
+  pinMode(INPUT, CODER_B_LEFT);
+  pinMode(INPUT, CODER_A_RIGHT);
+  pinMode(INPUT, CODER_B_RIGHT);
 
   pinMode(MOTOR_RIGHT, OUTPUT);  // motors
   pinMode(MOTOR_LEFT, OUTPUT);
   pinMode(ENABLE_RIGHT, OUTPUT);
   pinMode(ENABLE_LEFT, OUTPUT);
 
-  // Interrupt declarations
-  attachInterrupt(digitalPinToInterrupt(PIN_A_LEFT), updateLeftEncoder, RISING);
-  attachInterrupt(digitalPinToInterrupt(PIN_A_RIGHT), updateRightEncoder, RISING);
+  plierServo.attach(SERVO_PLIER);	// servomotors
 
-  // Initilising variables
+  // Interrupt declarations
+  attachInterrupt(digitalPinToInterrupt(CODER_A_LEFT), updateLeftEncoder, RISING);
+  attachInterrupt(digitalPinToInterrupt(CODER_A_RIGHT), updateRightEncoder, RISING);
+
+  // Initialising variables
   lastTime = millis();
 }
 
-void loop() {
 
-  updateCoders(lastTime);
+void loop() {
+  openPlier();
+  delay(5000);
+  closePlier();
+  delay(10000);
+
+  /*updateCoders(lastTime);
   lastTime = millis();
 
   if (k_display >= 100) {
@@ -45,5 +54,5 @@ void loop() {
     k_display = 0;
   } else k_display++;
 
-  delay(5);
+  delay(5);*/
 }

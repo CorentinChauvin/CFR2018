@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+	<node name="construction_plan" type="construction_plan_node" pkg="construction_plan" output="screen"/>
+	<node name="raspicam" type="raspicam_node.py" pkg="construction_plan" output="screen"/>
+</launch>
