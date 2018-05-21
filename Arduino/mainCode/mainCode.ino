@@ -41,12 +41,12 @@ void setup() {
 
 
 void loop() {
-  /*openPlier();
+  openPlier();
   delay(5000);
   closePlier();
-  delay(10000);*/
+  delay(10000);
 
-  updateCoders(lastTime);
+  /*updateCoders(lastTime);
   lastTime = millis();
 
   Twist desiredTwist = {0.2, -1};
@@ -55,7 +55,7 @@ void loop() {
   if (k_display >= 100) {
     displayTwist(robotTwist);
     k_display = 0;
-  } else k_display++;
+  } else k_display++;*/
 
   delay(5);
 }
