@@ -15,7 +15,7 @@
 		<param name="axis_angular" value="0"/>	<!-- 2 -->
 		<param name="axis_deadman" value="4"/>
 
-		<remap from="turtlebot_teleop_joystick/cmd_vel" to="robot/cmd_vel"/>
+		<remap from="turtlebot_teleop_joystick/cmd_vel" to="cmd_vel"/>
 	</node>
 
 	<node pkg="joy" type="joy_node" name="joystick"/>
