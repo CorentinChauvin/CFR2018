@@ -1,0 +1,11 @@
+<launch>
+
+	<node name="gmapping" type="slam_gmapping" pkg="gmapping" >
+		<remap from="tf" to="/tf" />
+		<remap from="scan" to="/scan" />
+		<remap from="map" to="/map" />
+
+		<rosparam file="$(find localisation)/config/gmapping.yaml" command="load" />
+	</node>
+
+</launch>

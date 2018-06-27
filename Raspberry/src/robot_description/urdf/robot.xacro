@@ -119,7 +119,7 @@
     <!-- Hokuyo -->
     <joint name="hokuyo_joint" type="fixed">
         <axis xyz="0 1 0" />
-        <origin xyz="${-cameraSize+chassisLength/2} 0 ${cameraSize+wheelRadius+cameraSize/2}" rpy="0 0 0"/>
+        <origin xyz="${-cameraSize+chassisLength/2} 0 ${2*wheelRadius}" rpy="0 0 0"/>
         <parent link="chassis"/>
         <child link="hokuyo_link"/>
     </joint>
