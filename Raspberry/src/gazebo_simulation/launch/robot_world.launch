@@ -1,38 +1,59 @@
-<launch>
-  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
-  <arg name="paused" default="false"/>
-  <arg name="use_sim_time" default="true"/>
-  <arg name="gui" default="true"/>
-  <arg name="headless" default="false"/>
-  <arg name="debug" default="false"/>
+<!-- Main launchfile to start the simulation -->
 
-  <!-- Load the URDF into the ROS Parameter Server -->
+<launch>
+
+  <!-- Start Gazebo simulation -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find gazebo_simulation)/worlds/mybot.world"/>
+    <arg name="debug" value="false" />
+    <arg name="gui" value="true" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="headless" value="false"/>
+  </include>
+
+
+  <!-- Spawn table from URDF -->
+  <param name="table_description"
+         command="$(find xacro)/xacro --inorder '$(find gazebo_simulation)/urdf/table.xacro'" />
+
+  <node name="table_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model table -param table_description"/>
+
+
+  <!-- Spawn robot from URDF -->
   <param name="robot_description"
          command="$(find xacro)/xacro --inorder '$(find robot_description)/urdf/robot.xacro'" />
 
-  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find gazebo_simulation)/worlds/mybot.world"/>
-    <arg name="debug" value="$(arg debug)" />
-    <arg name="gui" value="$(arg gui)" />
-    <arg name="paused" value="$(arg paused)"/>
-    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-    <arg name="headless" value="$(arg headless)"/>
-  </include>
+  <node name="robot_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model robot -param robot_description -x 0.2 -y 0.2 -z 0.0"/>
 
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-      args="-urdf -model robot -param robot_description"/>
+
+  <!-- Joint controllers -->
+  <rosparam file="$(find gazebo_simulation)/config/robot_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/robot" args="joint_state_controller
+                  rightWheel_effort_controller
+                  leftWheel_effort_controller"/>
+
+
+  <!-- State publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_description)/urdf/robot.xacro'" />
+    <remap from="/joint_states" to="/robot/joint_states" />
+  </node>
+
 
   <!-- Run RVIZ-->
   <!-- <node name="$(anon rviz)" pkg="rviz" type="rviz" args="$(find mybot_gazebo)/mybot.rviz" output="screen"/> -->
-  <node name="rviz" type="rviz" pkg="rviz" output="screen" />
+  <!-- <node name="rviz" type="rviz" pkg="rviz" output="screen" /> -->
 
-  <!-- ros_control launch file -->
-  <include file="$(find gazebo_simulation)/launch/robot_control.launch" />
 
   <!-- keyboard_teleop -->
   <!-- <include file="$(find gazebo_simulation)/launch/keyboard_teleop.launch" /> -->
+
 
   <!-- Localisation -->
   <include file="$(find localisation)/launch/gmapping.launch" />

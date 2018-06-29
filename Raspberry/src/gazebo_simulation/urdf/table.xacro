@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+<robot name="table" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find robot_description)/urdf/materials.xacro"/>
+  <xacro:include filename="$(find robot_description)/urdf/macros.xacro"/>
+
+
+  <!-- *** EXTERNAL WALLS *** -->
+  <xacro:property name="wallThickness" value="0.05"/>
+  <xacro:property name="wallHeight" value="0.3"/>
+  <xacro:property name="verticalWallLength" value="3.0"/>
+  <xacro:property name="horizontalWallLength" value="2.0"/>
+  <xacro:property name="wallMass" value="1000.0"/>
+
+  <!-- Left wall -->
+  <link name="leftWall">
+    <collision>
+      <origin xyz="${-wallThickness/2} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${wallThickness} ${verticalWallLength} ${wallHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${-wallThickness/2} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${wallThickness} ${verticalWallLength} ${wallHeight}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${-wallThickness/2} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <mass value="${wallMass}"/>
+      <box_inertia m="${wallMass}" x="${wallThickness}" y="${verticalWallLength}" z="${wallHeight}"/>
+    </inertial>
+  </link>
+
+  <!-- Right wall -->
+  <link name="rightWall">
+    <collision>
+      <origin xyz="${wallThickness/2} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${wallThickness} ${verticalWallLength} ${wallHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${wallThickness/2} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${wallThickness} ${verticalWallLength} ${wallHeight}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${wallThickness/2 + horizontalWallLength} ${verticalWallLength/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <mass value="${wallMass}"/>
+      <box_inertia m="${wallMass}" x="${wallThickness}" y="${horizontalWallLength}" z="${wallHeight}"/>
+    </inertial>
+  </link>
+
+  <joint name="left_to_Right" type="fixed">
+    <parent link="leftWall"/>
+    <child link="rightWall"/>
+    <origin xyz="${horizontalWallLength} 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Bottom wall -->
+  <link name="bottomWall">
+    <collision>
+      <origin xyz="${horizontalWallLength/2} ${-wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${horizontalWallLength} ${wallThickness} ${wallHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${horizontalWallLength/2} ${-wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${horizontalWallLength} ${wallThickness} ${wallHeight}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${horizontalWallLength/2} ${-wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <mass value="${wallMass}"/>
+      <box_inertia m="${wallMass}" x="${horizontalWallLength}" y="${wallThickness}" z="${wallHeight}"/>
+    </inertial>
+  </link>
+
+  <joint name="left_to_Bottom" type="fixed">
+    <parent link="leftWall"/>
+    <child link="bottomWall"/>
+  </joint>
+
+  <!-- Top wall -->
+  <link name="topWall">
+    <collision>
+      <origin xyz="${horizontalWallLength/2} ${wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${horizontalWallLength} ${wallThickness} ${wallHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${horizontalWallLength/2} ${wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${horizontalWallLength} ${wallThickness} ${wallHeight}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${horizontalWallLength/2} ${wallThickness/2} ${-wallHeight/2}" rpy="0 0 0"/>
+      <mass value="${wallMass}"/>
+      <box_inertia m="${wallMass}" x="${horizontalWallLength}" y="${wallThickness}" z="${wallHeight}"/>
+    </inertial>
+  </link>
+
+  <joint name="left_to_Top" type="fixed">
+    <parent link="leftWall"/>
+    <child link="topWall"/>
+    <origin xyz="0 ${verticalWallLength} 0" rpy="0 0 0"/>
+  </joint>
+
+
+  <!-- *** WASTEWATER TREATMENT PLANT *** -->
+  <xacro:property name="plantWidth" value="0.25"/>
+  <xacro:property name="plantLength" value="1.2"/>
+  <xacro:property name="plantHeight" value="0.25"/>
+  <xacro:property name="plantMass" value="1000"/>
+
+  <link name="wasteWaterTreatmentPlant">
+    <collision>
+      <origin xyz="${plantWidth/2} ${plantLength/2} ${-plantHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plantWidth} ${plantLength} ${plantHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${plantWidth/2} ${plantLength/2} ${-plantHeight/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plantWidth} ${plantLength} ${plantHeight}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${plantWidth/2} ${plantLength/2} ${-plantHeight/2}" rpy="0 0 0"/>
+      <mass value="${wallMass}"/>
+      <box_inertia m="${plantMass}" x="${plantWidth}" y="${plantLength}" z="${plantHeight}"/>
+    </inertial>
+  </link>
+
+  <joint name="rightWall_to_wasteWaterTreatmentPlant" type="fixed">
+    <parent link="rightWall"/>
+    <child link="wasteWaterTreatmentPlant"/>
+    <origin xyz="${-plantWidth} ${verticalWallLength/2 - plantLength/2} ${plantHeight-wallHeight}" rpy="0 0 0"/>
+  </joint>
+
+
+</robot>
