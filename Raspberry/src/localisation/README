@@ -1,0 +1,5 @@
+To build the map :
+- Remove the simulation laser noise in robot_description/urdf/robot.gazebo
+- Run the simulation and gmapping
+- Move the robot around so that the map is built (visualise it with Rviz)
+- Save the map : rosrun map_server map_saver -f map_name

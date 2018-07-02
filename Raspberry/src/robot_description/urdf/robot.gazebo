@@ -17,17 +17,26 @@
       <wheelDiameter>${2*wheelRadius}</wheelDiameter>
       <torque>20</torque>
       <commandTopic>/cmd_vel</commandTopic>
-      <odometryTopic>/odom_diffdrive</odometryTopic>
+      <odometryTopic>/odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
-      <robotBaseFrame>footprint</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
       <legacyMode>false</legacyMode>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+      <robotNamespace>/</robotNamespace>
+      <jointName>left_wheel_hinge, right_wheel_hinge</jointName>
+      <updateRate>100.0</updateRate>
+      <alwaysOn>true</alwaysOn>
     </plugin>
   </gazebo>
 
   <gazebo>
     <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
       <frameName>map</frameName>
-      <bodyName>chassis</bodyName>
+      <bodyName>base_link</bodyName>
       <topicName>/odom_ground_truth</topicName>
       <updateRate>30.0</updateRate>
     </plugin>
@@ -102,7 +111,7 @@
           stddev of 0.01m will put 99.7% of samples within 0.03m of the true
           reading. -->
           <mean>0.0</mean>
-          <stddev>0.01</stddev>
+          <stddev>0.005</stddev>
         </noise>
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">

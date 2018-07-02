@@ -1,6 +1,9 @@
 <!-- Main launchfile to start the simulation -->
 
 <launch>
+  <arg name="initial_pose_x" value="0.4" />
+  <arg name="initial_pose_y" value="0.4" />
+  <arg name="initial_pose_z" value="0.0" />
 
   <!-- Start Gazebo simulation -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -26,14 +29,14 @@
          command="$(find xacro)/xacro --inorder '$(find robot_description)/urdf/robot.xacro'" />
 
   <node name="robot_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-      args="-urdf -model robot -param robot_description -x 0.2 -y 0.2 -z 0.0"/>
+      args="-urdf -model robot -param robot_description -x $(arg initial_pose_x) -y $(arg initial_pose_y) -z $(arg initial_pose_z)"/>
 
 
   <!-- Joint controllers -->
   <rosparam file="$(find gazebo_simulation)/config/robot_control.yaml" command="load"/>
 
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-        output="screen" ns="/robot" args="joint_state_controller
+        output="screen" args="joint_state_controller
                   rightWheel_effort_controller
                   leftWheel_effort_controller"/>
 
@@ -42,13 +45,12 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
         respawn="false" output="screen">
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_description)/urdf/robot.xacro'" />
-    <remap from="/joint_states" to="/robot/joint_states" />
   </node>
 
 
   <!-- Run RVIZ-->
   <!-- <node name="$(anon rviz)" pkg="rviz" type="rviz" args="$(find mybot_gazebo)/mybot.rviz" output="screen"/> -->
-  <!-- <node name="rviz" type="rviz" pkg="rviz" output="screen" /> -->
+  <node name="rviz" type="rviz" pkg="rviz" output="screen" />
 
 
   <!-- keyboard_teleop -->
@@ -56,6 +58,15 @@
 
 
   <!-- Localisation -->
-  <include file="$(find localisation)/launch/gmapping.launch" />
+  <!-- <include file="$(find localisation)/launch/gmapping.launch" /> -->
+
+  <arg name="map_file" default="$(find localisation)/maps/map.yaml" />
+  <node name="map_server" type="map_server" pkg="map_server" args="$(arg map_file)" />
+
+  <include file="$(find localisation)/launch/amcl.launch">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)" />
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)" />
+    <arg name="initial_pose_z" value="$(arg initial_pose_z)" />
+  </include>
 
 </launch>

@@ -10,10 +10,11 @@
 
   <xacro:property name="casterRadius" value="0.05"/>
   <xacro:property name="casterMass" value="0.5"/>
+  <xacro:property name="casterPos" value="0.2"/>
 
   <xacro:property name="wheelWidth" value="0.05"/>
   <xacro:property name="wheelRadius" value="0.1"/>
-  <xacro:property name="wheelPos" value="0.2"/>
+  <xacro:property name="wheelPos" value="0.05"/>  <!-- Distance of the wheels axis to the center of the robot -->
   <xacro:property name="wheelMass" value="0.5"/>
 
   <xacro:property name="cameraSize" value="0.05"/>
@@ -24,11 +25,12 @@
   <xacro:include filename="$(find robot_description)/urdf/macros.xacro" />
 
   <!-- Chassis -->
-  <link name="footprint" />
+  <link name="base_link" />
 
   <joint name="base_joint" type="fixed">
-    <parent link="footprint"/>
+    <parent link="base_link"/>
     <child link="chassis"/>
+    <origin xyz="${wheelPos} 0 0" rpy="0 0 0" />
   </joint>
 
   <link name="chassis">
@@ -58,6 +60,7 @@
   <joint name="fixed" type="fixed">
     <parent link="chassis"/>
     <child link="caster_wheel"/>
+    <origin xyz="${casterPos} 0 0" rpy="0 0 0" />
   </joint>
 
   <link name="caster_wheel">
@@ -118,8 +121,7 @@
 
   <!-- Hokuyo -->
   <joint name="hokuyo_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="${-cameraSize+chassisLength/2} 0 ${2*wheelRadius}" rpy="0 0 0"/>
+    <origin xyz="${-cameraSize+chassisLength/2} 0 ${2*wheelRadius + 0.01}" rpy="0 0 0"/>
     <parent link="chassis"/>
     <child link="hokuyo_link"/>
   </joint>
@@ -133,7 +135,7 @@
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.02" rpy="0 0 0"/>
       <geometry>
         <mesh filename="package://robot_description/urdf/hokuyo.dae"/>
       </geometry>
